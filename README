@@ -1,0 +1,17 @@
+Puppet module for installation Redis on Debian/Ubuntu
+
+Installs init.d script /etc/init.d/redis-server
+
+Config file goes to /etc/redis.conf
+Database will be saved to /var/lib/redis 
+
+Example usage:
+
+    $redis_interface = 'eth0'
+    include redis
+    
+Dependencies:
+- Buidlenv module: https://github.com/vurbia/puppet-buildenv.git
+- Common module: https://github.com/vurbia/puppet-common.git
+- Logrotate module: https://github.com/vurbia/puppet-logrotate.git
+- User module: https://github.com/vurbia/puppet-user.git
