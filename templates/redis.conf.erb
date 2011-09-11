@@ -158,6 +158,20 @@ maxmemory <%= scope.lookupvar('redis::params::maxmemory') %>
 # maxmemory <bytes>
 <% end -%>
 
+# This new configuration option is used to specify the algorithm (policy) to use when we need to reclaim memory. There are five different algorithms now:
+# 
+#     volatile-lru remove a key among the ones with an expire set, trying to remove keys not recently used.
+#     volatile-ttl remove a key among the ones with an expire set, trying to remove keys with short remaining time to live.
+#     volatile-random remove a random key among the ones with an expire set.
+#     allkeys-lru like volatile-lru, but will remove every kind of key, both normal keys or keys with an expire set.
+#     allkeys-random like volatile-random, but will remove every kind of keys, both normal keys and keys with an expire set.
+#
+<% if scope.lookupvar('redis::params::maxmemory') then -%>
+maxmemory-policy <%= scope.lookupvar('redis::params::maxmemory_policy') %>
+<% else -%>
+# maxmemory-policy volatile-lru
+<% end -%>
+
 ############################## APPEND ONLY MODE ###############################
 
 # By default Redis asynchronously dumps the dataset on disk. If you can live

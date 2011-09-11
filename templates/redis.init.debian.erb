@@ -44,9 +44,11 @@ case "$1" in
     then
       echo "failed"
     else
-      LISTENING_PORT=`grep -E "port +([0-9]+)" "$CONFIG_FILE" | grep -Eo "[0-9]+"`
-      $REDIS_CLI -p $LISTENING_PORT SHUTDOWN
-      #rm -f $PIDFILE
+      <% if scope.lookupvar('redis::params::interface') then -%>
+      $REDIS_CLI -h <%= scope.lookupvar('redis::params::bind_address') %> -p <%= scope.lookupvar('redis::params::port') %> SHUTDOWN
+      <% else -%>
+      $REDIS_CLI -p <%= scope.lookupvar('redis::params::port') %> SHUTDOWN
+      <% end -%>
     fi
     ;;
 

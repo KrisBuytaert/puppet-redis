@@ -202,6 +202,22 @@ class redis::params {
     default => $redis_maxmemory,
   }
   
+  # This new configuration option is used to specify the algorithm (policy) to use when we need to reclaim memory. There are five different algorithms now:
+  # 
+  #     volatile-lru remove a key among the ones with an expire set, trying to remove keys not recently used.
+  #     volatile-ttl remove a key among the ones with an expire set, trying to remove keys with short remaining time to live.
+  #     volatile-random remove a random key among the ones with an expire set.
+  #     allkeys-lru like volatile-lru, but will remove every kind of key, both normal keys or keys with an expire set.
+  #     allkeys-random like volatile-random, but will remove every kind of keys, both normal keys and keys with an expire set.
+  $maxmemory_policy  = $redis_maxmemory_policy ? {
+    'volatile-lru'    => 'volatile-lru',
+    'volatile-ttl'    => 'volatile-ttl',
+    'volatile-random' => 'volatile-random',
+    'allkeys-lru'     => 'allkeys-lru',
+    'allkeys-random'  => 'allkeys-random',
+    default           => 'volatile-lru',
+  }
+  
   ############################## APPEND ONLY MODE ###############################
   #
   # By default Redis asynchronously dumps the dataset on disk. If you can live
