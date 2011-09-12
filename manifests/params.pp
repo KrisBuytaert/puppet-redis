@@ -112,6 +112,7 @@ class redis::params {
   #   Note: you can disable saving at all commenting all the "save" lines.
   $save = $redis_save ? {
     ''      => [ '900 1', '300 10','60 10000' ],
+    'false' => false,
     default => split($redis_save, ','),
   }
   

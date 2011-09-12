@@ -69,8 +69,10 @@ databases 16
 #   after 60 sec if at least 10000 keys changed
 #
 #   Note: you can disable saving at all commenting all the "save" lines.
+<% if scope.lookupvar('redis::params::save') then -%>
 <% scope.lookupvar('redis::params::save').each do |save| -%>
 save <%= save %>
+<% end -%>
 <% end -%>
 
 # Compress string objects using LZF when dump .rdb databases?
