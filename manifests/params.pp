@@ -3,78 +3,78 @@
 #
 class redis::params {
   # TODO: refactor this var to a common module and make other module use it
-	$os_suffix = $operatingsystem ? {
-		/(?i)(Debian|Ubuntu)/ => 'debian',
-		/(?i)(RedHat|CentOS)/ => 'redhat',
-	}
-	
+  $os_suffix = $operatingsystem ? {
+    /(?i)(Debian|Ubuntu)/ => 'debian',
+    /(?i)(RedHat|CentOS)/ => 'redhat',
+  }
+
   $version = $redis_version ? {
     ''      => '2.2.12',
     default => $redis_version,
   }
-  
+
   $libdir = $redis_libdir ? {
     ''      => '/var/lib/redis',
     default => $redis_libdir,
   }
-  
-	$logdir = $redis_logdir ? {
-	 ''      => '/var/log/redis',
-	 default => $redis_logdir,
-	}
-	
-	$configfile = $redis_configfile ? {
-	 ''      => '/etc/redis.conf',
-	 default => $redis_configfile,
-	}
-	
-	$user = $redis_user ? {
-	 ''     => 'redis',
-	 default => $redis_user,
-	}
-	
-	# Configuration parameters for redis.conf
-	
-	# By default Redis will be configured to run as a daemon. Use 'no' if you don't want to.
+
+  $logdir = $redis_logdir ? {
+    ''      => '/var/log/redis',
+    default => $redis_logdir,
+  }
+
+  $configfile = $redis_configfile ? {
+    ''      => '/etc/redis.conf',
+    default => $redis_configfile,
+  }
+
+  $user = $redis_user ? {
+    ''     => 'redis',
+    default => $redis_user,
+  }
+
+  # Configuration parameters for redis.conf
+
+  # By default Redis will be configured to run as a daemon. Use 'no' if you don't want to.
   # Note that Redis will write a pid file in the location specified by
   # $redis_pidfile (/var/run/redis.pid by default) when daemonized.
-	$daemonize = $redis_daemonize ? {
-	 'yes'   => 'yes',
-	 'no'    => 'no',
-	 default => 'yes',
-	}
-	
-	# When run as a daemon, Redis write a pid file in /var/run/redis.pid by default.
+  $daemonize = $redis_daemonize ? {
+    'yes'   => 'yes',
+    'no'    => 'no',
+    default => 'yes',
+  }
+
+  # When run as a daemon, Redis write a pid file in /var/run/redis.pid by default.
   # You can specify a custom pid file location here.
-	$pidfile = $redis_pidfile ? {
-	 ''      => '/var/run/redis.pid',
-	 default => $redis_pidfile,
-	}
-	
-	# Accept connections on the specified port, default is 6379
-	$port = $redis_port ? {
-	 ''      => '6379',
-	 default => $redis_port,
-	}
-	
-	# If you want to bind redis to a single interface, specify one here.
-	# If an interface is not specified (the default) the bind option is not
+  $pidfile = $redis_pidfile ? {
+    ''      => '/var/run/redis.pid',
+    default => $redis_pidfile,
+  }
+
+  # Accept connections on the specified port, default is 6379
+  $port = $redis_port ? {
+    ''      => '6379',
+    default => $redis_port,
+  }
+
+  # If you want to bind redis to a single interface, specify one here.
+  # If an interface is not specified (the default) the bind option is not
   # used and all the interfaces will listen for connections.
-	$interface = $redis_interface ? {
-		''      => false,
-		default => $redis_interface,
-	}
-	if $interface {
-	  $bind_address = inline_template("<%= scope.lookupvar('ipaddress_' + interface) %>")
-	}
-	
-	# Close the connection after a client is idle for N seconds (0 to disable)
-	$timeout = $redis_timeout ? {
-	 ''      => '300',
-	 default => $redis_timeout,
-	}
-	
-	# Set server logging verbosity. It can be one of:
+  $interface = $redis_interface ? {
+    ''      => false,
+    default => $redis_interface,
+  }
+  if $interface {
+    $bind_address = inline_template("<%= scope.lookupvar('ipaddress_' + interface) %>")
+  }
+
+  # Close the connection after a client is idle for N seconds (0 to disable)
+  $timeout = $redis_timeout ? {
+    ''      => '300',
+    default => $redis_timeout,
+  }
+
+  # Set server logging verbosity. It can be one of:
   # debug (a lot of information, useful for development/testing)
   # verbose (many rarely useful info, but not a mess like the debug level)
   # notice (moderately verbose, what you want in production probably)
@@ -86,7 +86,7 @@ class redis::params {
     'warning' => 'warning',
     default   => 'notice',
   }
-  
+
   # Set the number of databases. The default database is DB 0, you can select
   # a different one on a per-connection basis using SELECT <dbid> where
   # dbid is a number between 0 and 'databases'-1
@@ -94,7 +94,7 @@ class redis::params {
     ''      => '16',
     default => $redis_databases,
   }
-  
+
   ############################### SNAPSHOTTING  #################################
   #
   # Save the DB on disk:
@@ -109,13 +109,13 @@ class redis::params {
   #   after 300 sec (5 min) if at least 10 keys changed
   #   after 60 sec if at least 10000 keys changed
   #
-  #   Note: you can disable saving at all commenting all the "save" lines.
+  #   Note: you can disable saving at all commenting all the 'save' lines.
   $save = $redis_save ? {
     ''      => [ '900 1', '300 10','60 10000' ],
     'false' => false,
     default => split($redis_save, ','),
   }
-  
+
   # Compress string objects using LZF when dump .rdb databases?
   # For default that's set to 'yes' as it's almost always a win.
   # If you want to save some CPU in the saving child set it to 'no' but
@@ -125,13 +125,13 @@ class redis::params {
     'no'    => 'no',
     default => 'yes',
   }
-  
+
   # The filename where to dump the DB
   $dbfilename = $redis_dbfilename ? {
     ''      => 'dump.rdb',
     default => $redis_dbfilename,
   }
-  
+
   ################################# REPLICATION #################################
   #
   # Master-Slave replication. Specify master_ip to make this Redis instance a copy of
@@ -142,12 +142,12 @@ class redis::params {
     ''      => false,
     default => $redis_master_ip,
   }
-  
+
   $master_port = $redis_master_port ? {
     ''      => $port,
     default => $redis_master_port,
   }
-  
+
   # If the master is password protected (using the "requirepass" configuration
   # directive) it is possible to tell the slave to authenticate before
   # starting the replication synchronization process, otherwise the master will
@@ -156,7 +156,7 @@ class redis::params {
     ''      => false,
     default => $redis_master_password,
   }
-  
+
   ################################## SECURITY ###################################
   #
   # Require clients to issue AUTH <PASSWORD> before processing any other
@@ -169,7 +169,7 @@ class redis::params {
     ''      => false,
     default => $redis_requirepass,
   }
-  
+
   ################################### LIMITS ####################################
   #
   # Set the max number of connected clients at the same time. By default there
@@ -181,7 +181,7 @@ class redis::params {
     ''      => false,
     default => $redis_maxclients,
   }
-  
+
   # Don't use more memory than the specified amount of bytes.
   # When the memory limit is reached Redis will try to remove keys with an
   # EXPIRE set. It will try to start freeing keys that are going to expire
@@ -202,9 +202,9 @@ class redis::params {
     ''      => false,
     default => $redis_maxmemory,
   }
-  
+
   # This new configuration option is used to specify the algorithm (policy) to use when we need to reclaim memory. There are five different algorithms now:
-  # 
+  #
   #     volatile-lru remove a key among the ones with an expire set, trying to remove keys not recently used.
   #     volatile-ttl remove a key among the ones with an expire set, trying to remove keys with short remaining time to live.
   #     volatile-random remove a random key among the ones with an expire set.
@@ -218,7 +218,7 @@ class redis::params {
     'allkeys-random'  => 'allkeys-random',
     default           => 'volatile-lru',
   }
-  
+
   ############################## APPEND ONLY MODE ###############################
   #
   # By default Redis asynchronously dumps the dataset on disk. If you can live
@@ -243,7 +243,7 @@ class redis::params {
     'no'    => 'no',
     default => 'no',
   }
-  
+
   # The fsync() call tells the Operating System to actually write data on disk
   # instead to wait for more data in the output buffer. Some OS will really flush
   # data on disk, some other OS will just try to do it ASAP.
@@ -269,7 +269,7 @@ class redis::params {
     'no'       => 'no',
     default    => 'everysec',
   }
-  
+
   ################################ VIRTUAL MEMORY ###############################
   #
   # Virtual Memory allows Redis to work with datasets bigger than the actual
@@ -285,7 +285,7 @@ class redis::params {
     'no'    => 'no',
     default => 'no',
   }
-  
+
   # This is the path of the Redis swap file. As you can guess, swap files
   # can't be shared by different Redis instances, so make sure to use a swap
   # file for every redis process you are running.
@@ -305,7 +305,7 @@ class redis::params {
     ''      => '/tmp/redis-%p.vm',
     default => $redis_vm_swap_file,
   }
-  
+
   # vm-max-memory configures the VM to use at max the specified amount of
   # RAM. Everything that deos not fit will be swapped on disk *if* possible, that
   # is, if there is still enough contiguous space in the swap file.
@@ -318,7 +318,7 @@ class redis::params {
     ''      => '0',
     default => $redis_vm_max_memory,
   }
-  
+
   # Redis swap files is split into pages. An object can be saved using multiple
   # contiguous pages, but pages can't be shared between different objects.
   # So if your page is too big, small objects swapped out on disk will waste
@@ -332,7 +332,7 @@ class redis::params {
     ''      => '32',
     default => $redis_vm_page_size,
   }
-  
+
   # Number of total memory pages in the swap file.
   # Given that the page table (a bitmap of free/used pages) is taken in memory,
   # every 8 pages on disk will consume 1 byte of RAM.
@@ -348,7 +348,7 @@ class redis::params {
     ''      => '134217728',
     default => $redis_vm_pages,
   }
-  
+
   # Max number of VM I/O threads running at the same time.
   # This threads are used to read/write data from/to swap file, since they
   # also encode and decode objects from disk to memory or the reverse, a bigger
@@ -362,7 +362,7 @@ class redis::params {
     ''      => '4',
     default => $redis_vm_max_threads,
   }
-  
+
   ############################### ADVANCED CONFIG ###############################
   #
   # Glue small output buffers together in order to send small replies in a
@@ -373,7 +373,7 @@ class redis::params {
     'no'    => 'no',
     default => 'yes',
   }
-  
+
   # Hashes are encoded in a special way (much more memory efficient) when they
   # have at max a given numer of elements, and the biggest element does not
   # exceed a given threshold. You can configure this limits with the following
@@ -382,12 +382,12 @@ class redis::params {
     ''      => '64',
     default => $redis_hash_max_zipmap_entries,
   }
-  
+
   $hash_max_zipmap_value = $redis_hash_max_zipmap_value ? {
     ''      => '512',
     default => $redis_hash_max_zipmap_value,
   }
-  
+
   # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
   # order to help rehashing the main Redis hash table (the one mapping top-level
   # keys to values). The hash table implementation redis uses (see dict.c)
