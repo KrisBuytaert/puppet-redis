@@ -1,14 +1,24 @@
 Redis Puppet module
 
-Tested with Ubuntu and CentOS (Debian and RHEL supported but not tested yet)
+Not tested on Ubuntu only on CentOS
+
+Still fighting with redis vs redis-server
+
+ redis doesn't stop correctly .. the upstream rc scripts are broken and need 
+ fixing but I don't have time now.
 
 Example usage:
 
+  Antipattern downloading unpackaged stuff
     $redis_interface = 'eth0'
     include redis
-    
-Dependencies:
-- Buidlenv module: https://github.com/vurbia/puppet-buildenv.git
-- Common module: https://github.com/vurbia/puppet-common.git
-- Logrotate module: https://github.com/vurbia/puppet-logrotate.git
-- User module: https://github.com/vurbia/puppet-user.git
+
+  Using Packages :
+
+    require redis::params
+    $redis_interface = 'eth1'
+    include redis::package
+    include redis::config
+    include redis::service
+
+

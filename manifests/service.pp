@@ -2,7 +2,7 @@
 #
 #
 class redis::service {
-  service { 'redis-server':
+  service { 'redis':
     ensure     => running,
     enable     => true,
     hasrestart => true,
